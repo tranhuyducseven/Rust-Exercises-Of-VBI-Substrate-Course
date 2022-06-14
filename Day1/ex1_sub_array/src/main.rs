@@ -45,8 +45,7 @@ fn main() {
     let sub_array: Vec<String> = input_array("sub");
     if is_sub_array(parent_array, sub_array) {
         println!("Yes, it is a sub array")
-    }
-    else{
+    } else {
         println!("No, it isn't")
     }
 }
