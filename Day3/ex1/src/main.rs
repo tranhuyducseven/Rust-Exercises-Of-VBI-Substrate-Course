@@ -68,14 +68,17 @@
 /*-----------------------------*/
 
 // Sườn thông tin cho mọi người dễ làm
+
+use std::cmp::Ordering;
 use std::collections::HashMap;
 
+#[derive(Debug)]
 pub struct School<T> {
     students: HashMap<String, T>,
     grades_list: Vec<T>,
 }
 
-impl<T> School<T> {
+impl<T: Clone + Ord + PartialOrd + Eq + Copy> School<T> {
     pub fn new() -> Self {
         Self {
             students: HashMap::new(),
@@ -84,25 +87,49 @@ impl<T> School<T> {
     }
 
     pub fn add(&mut self, grade: T, student: &str) {
+        let cloned_grade = grade.clone();
         self.students.insert(student.to_string(), grade);
-        self.grades_list.push(grade);
-        self.grades_list.sort();
-        println!("{}", self.grades_list);
-
+        self.grades_list.push(cloned_grade);
+        self.grades_list.sort_by(|a, b| {
+            if a < b {
+                Ordering::Less
+            } else if a == b {
+                Ordering::Equal
+            } else {
+                Ordering::Greater
+            }
+        });
+        self.grades_list.dedup();
     }
 
     pub fn grades(&self) -> Vec<T> {
-       
+        (self.grades_list).to_vec()
     }
-
-    // pub fn grade(&self, grade: u32) -> Vec<String> {
-    //     unimplemented!()
-    // }
+    pub fn find_student(&self, grade: T) -> Vec<&String> {
+        let mut students_with_same_grades: Vec<&String> = self
+            .students
+            .iter()
+            .filter(|(_key, &value)| return value == grade)
+            .map(|(key, &_value)| {
+                return key;
+            })
+            .collect();
+        students_with_same_grades.sort();
+        return students_with_same_grades;
+    }
 }
 
 fn main() {
     let mut school: School<u32> = School::new();
-    school.add(8, "Alice");
-    school.add(7, "Bob");
-
+    school.add(7, "Alice");
+    school.add(7, "Bob");    
+    school.add(7, "Bill");
+    //1. demo adding function
+    // println!("{:?}", school);
+    //2. demo Listing grades_list function
+    // println!("{:?}", school.grades_list);
+    // println!("{:?}", school.grades());
+    //3. demo finding grade function
+    // let list_of_students_with_same_grades = school.find_student(7);
+    // println!("{:?}", list_of_students_with_same_grades);
 }
