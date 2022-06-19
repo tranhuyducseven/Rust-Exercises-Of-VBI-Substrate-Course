@@ -120,16 +120,21 @@ impl<T: Clone + Ord + PartialOrd + Eq + Copy> School<T> {
 }
 
 fn main() {
-    let mut school: School<u32> = School::new();
-    school.add(7, "Alice");
-    school.add(7, "Bob");    
-    school.add(7, "Bill");
+    let mut school: School<&str> = School::new();
+    school.add("A+", "Bob");    
+    school.add("A", "Alice");
+    school.add("B", "Bill");
+    school.add("C", "Charlie");    
+    school.add("A+", "Bob");    
+    school.add("A+", "Andy");    
+
     //1. demo adding function
-    // println!("{:?}", school);
+    println!("demo adding function: {:?}", school.students);
     //2. demo Listing grades_list function
-    // println!("{:?}", school.grades_list);
+    println!("demo listing grades function{:?}", school.grades_list);
     // println!("{:?}", school.grades());
     //3. demo finding grade function
-    // let list_of_students_with_same_grades = school.find_student(7);
-    // println!("{:?}", list_of_students_with_same_grades);
+    let grade: &str = "A+";
+    let list_of_students_with_same_grades = school.find_student("A+");
+    println!("demo finding grade {}: {:?}",grade, list_of_students_with_same_grades);
 }
